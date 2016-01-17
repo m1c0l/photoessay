@@ -1,0 +1,14 @@
+{
+	"devDependencies": {
+		"browser-sync": "^2.2.1",
+		"gulp": "^3.8.11",
+		"gulp-changed": "^1.2.1",
+		"gulp-data": "^1.2.1",
+		"gulp-gm": "^0.0.8",
+		"gulp-jade": "^1.0.0",
+		"gulp-jshint": "^1.9.2",
+		"gulp-watch": "^4.1.1",
+		"rimraf": "^2.4.4",
+		"run-sequence": "^1.0.2"
+	}
+}

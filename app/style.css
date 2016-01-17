@@ -1,0 +1,40 @@
+body {
+	margin: 0;
+	font-family: Helvetica;
+}
+section.header {
+	padding: 10px;
+}
+section.header p.description {
+	font-size: 18px;
+}
+div.imgContainer {
+	position: relative;
+	height: 0;
+}
+img {
+	width: 100%;
+	position: relative;
+}
+div.imgTitle {
+	position: absolute;
+	top: 0;
+	width: 100%;
+	text-align: center;
+}
+div.imgTitle div.titleContent {
+	font-size: 5.5vw;
+	padding: 2vw 1vw;
+	display: inline-block;
+}
+div.imgCaption {
+	position: absolute;
+	bottom: 0;
+	color: #fff;
+	width: 100%;
+	background-color: rgba(0, 0, 0, .5);
+}
+div.imgCaption div.captionContent {
+	font-size: 1.5vw;
+	padding: 1vw;
+}

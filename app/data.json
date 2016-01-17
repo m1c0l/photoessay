@@ -1,0 +1,18 @@
+{
+	"defaultAspectRatio": 1.5,
+	"imageData": [
+		{
+			"filename": "title.JPG",
+			"caption": "Description of my travels",
+			"title": "My Photos"
+		},
+		{
+			"filename": "taipei-101-portrait.JPG",
+			"caption": "Taipei 101",
+			"aspectRatio": 0.66667
+		},
+		{
+			"filename": "taipei-101-landscape.JPG"
+		}
+	]
+}
