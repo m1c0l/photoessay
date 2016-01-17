@@ -13,12 +13,12 @@ Then navigate to this repo's base directory and run `npm install` to install gul
 
 ### Running the example
 
-If installation worked, run `gulp` from the repo's base directory and if successful, your browser will open a new tab to http://localhost:9000 that shows the site.
+If installation worked, run `gulp` from the repo's base directory and if successful, your browser will open a new tab to http://localhost:9000 that shows the site; it should look like http://mikeli.me/github/photoessay-example/
 
 ## How it works
 
 When you run `gulp`, it does the following:
-- create a build directory, app/build, which will be the static site
+- create a build directory, `app/build`, which will be the static site
 - copies the CSS stylesheet, `app/style.css` to the build
 - copies JS files to the build and outputs any errors using [JSHint](http://jshint.com/)
 - take images from `app/images` and copies resized versions (using GraphicsMagick) to the build
@@ -26,7 +26,7 @@ When you run `gulp`, it does the following:
 - open the build directory in your browser (i.e., run your build's `index.html`) as http://localhost:9000 using [BrowserSync](https://www.browsersync.io/), a cross-browser testing tool
 - watch your development files for changes, and when one of them does, run the task to update the build. e.g., when you change a CSS file, gulp will copy that over to the build and use BrowserSync to automatically reload your browsers to reflect the changes you made
 
-For more details, see `gulpfile.js`
+For more details, see `gulpfile.js`. When you're ready to deploy, simply upload the `app/build` directory to your website.
 
 ### Image data
 
