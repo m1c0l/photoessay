@@ -18,13 +18,13 @@ If installation worked, run `gulp` from the repo's base directory and if success
 ## How it works
 
 When you run `gulp`, it does the following:
-- create a build directory, `app/build`, which will be the static site
+- creates a build directory, `app/build`, which will be the static site
 - copies the CSS stylesheet, `app/style.css` to the build
 - copies JS files to the build and outputs any errors using [JSHint](http://jshint.com/)
-- take images from `app/images` and copies resized versions (using GraphicsMagick) to the build
-- take image data from `app/data.json`, pull that into `app/index.jade`, a [Jade file](http://jade-lang.com/), and then compile that `index.html` in the build
-- open the build directory in your browser (i.e., run your build's `index.html`) as http://localhost:9000 using [BrowserSync](https://www.browsersync.io/), a cross-browser testing tool
-- watch your development files for changes, and when one of them does, run the task to update the build. e.g., when you change a CSS file, gulp will copy that over to the build and use BrowserSync to automatically reload your browsers to reflect the changes you made
+- takes images from `app/images` and copies resized versions (using GraphicsMagick) to the build
+- takes image data from `app/data.json`, pull that into `app/index.pug`, a [Pug file](https://pugjs.org/), and then compile that `index.html` in the build
+- opens the build directory in your browser (i.e., run your build's `index.html`) as http://localhost:9000 using [BrowserSync](https://www.browsersync.io/), a cross-browser testing tool
+- watches your development files for changes, and when one of them does, run the task to update the build. e.g., when you change a CSS file, gulp will copy that over to the build and use BrowserSync to automatically reload your browsers to reflect the changes you made
 
 For more details, see `gulpfile.js`. When you're ready to deploy, simply upload the `app/build` directory to your website.
 
@@ -33,7 +33,7 @@ For more details, see `gulpfile.js`. When you're ready to deploy, simply upload 
 The site's html is generated from data in `app/data.json`, which has the following variables:
 - `defaultAspectRatio`: the default aspect ratio of your photos (width divided by height); useful if most of your photos have the same aspect ratio, like 1.5. The aspect ratio's needed to properly set the height of the images displayed on the site.
 - `imageData`: an array containing the file name, caption and title of each image
-  - `filename`: base name of the image; the path is taken care of in `app/index.jade`
+  - `filename`: base name of the image; the path is taken care of in `app/index.pug`
   - `title` [optional]: title of the image, placed at the top center of the image
   - `caption` [optional]: caption of the image, placed at the bottom of the image
   - `aspectRatio`: aspect ratio of the image; if specified, is used instead of `defaultAspectRatio`
