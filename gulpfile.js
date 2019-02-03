@@ -1,42 +1,42 @@
-var gulp = require('gulp');
-var browserSync = require('browser-sync');
-var reload = browserSync.reload;
-var changed = require('gulp-changed');
-var data = require('gulp-data');
-var gm = require('gulp-gm');
-var jade = require('gulp-jade');
-var jshint = require('gulp-jshint');
-var watch = require('gulp-watch');
-var rimraf = require('rimraf');
-var runSequence = require('run-sequence');
+let gulp = require('gulp');
+let browserSync = require('browser-sync');
+let reload = browserSync.reload;
+let changed = require('gulp-changed');
+let data = require('gulp-data');
+let gm = require('gulp-gm');
+let pug = require('gulp-pug');
+let jshint = require('gulp-jshint');
+let watch = require('gulp-watch');
+let rimraf = require('rimraf');
 
 // paths for the development and build directories
-var paths = {
+let paths = {
 	app: "./app",
 	build: "./app/build"
 };
 
 // Some common file paths needed
 
-// index.jade is convenient since we need to build to index.html
+// index.pug is convenient since we need to build to index.html
 // because BrowserSync loads the build directory, so it looks for index.html
-var jadeFilename = paths.app + '/index.jade';
-var cssFilename = paths.app + '/style.css';
-var dataFilename = paths.app + '/data.json';
-var jsFilesPath = paths.app + '/*.js';
-var imgSrcPath = paths.app + '/images/*.JPG';
-var imgBuildDir = paths.build + '/images';
+let pugFilename = paths.app + '/index.pug';
+let cssFilename = paths.app + '/style.css';
+let dataFilename = paths.app + '/data.json';
+let jsFilesPath = paths.app + '/*.js';
+let imgSrcPath = paths.app + '/images/*.JPG';
+let imgBuildDir = paths.build + '/images';
 
-// Jade task: Pull in image data from the json file and 
-// compile the Jade file into html, and copy to the build folder
-gulp.task('jade', function() {
-	var stream = gulp.src(jadeFilename)
+// pug task: Pull in image data from the json file and
+// compile the pug file into html, and copy to the build folder
+gulp.task('pug', function() {
+	let stream = gulp.src(pugFilename)
 		.pipe(data(function(file) {
 			return require(dataFilename);
 		}))
-		.pipe(jade())
+		.pipe(pug())
 		.pipe(gulp.dest(paths.build))
-		.pipe(reload({stream: true})); // reload the browser whenever we want to show changes
+		// reload the browser whenever we want to show changes
+		.pipe(reload({stream: true}));
 	// require() caches the json file, so we need to clear it 
 	// from the cache after the task finishes, or else when we
 	// call require() on the json file again during the 
@@ -48,14 +48,16 @@ gulp.task('jade', function() {
 	return stream;
 });
 
-// css task: copy stylesheets to the build folder and reload the browser to show changes
+// css task: copy stylesheets to the build folder and reload the browser to show
+// changes
 gulp.task('css', function() {
 	return gulp.src(cssFilename)
 		.pipe(gulp.dest(paths.build))
 		.pipe(reload({stream: true}));
 });
 
-// scripts task: run JS scripts through JSHint and copy to build folder, reload browser to show changes
+// scripts task: run JS scripts through JSHint and copy to build folder, reload
+// browser to show changes.
 // JSHint ignores files listed in the .jshintignore file
 gulp.task('scripts', function() {
 	return gulp.src(jsFilesPath)
@@ -68,7 +70,7 @@ gulp.task('scripts', function() {
 // GraphicsMagick task: resize images to a set width,
 // while the height stays at the original aspect ratio.
 // To save time, only process images that have been changed.
-var resizedImageWidth = 1366;
+let resizedImageWidth = 1366;
 gulp.task('gm', function() {
 	return gulp.src(imgSrcPath)
 		.pipe(changed(imgBuildDir))
@@ -84,8 +86,8 @@ gulp.task('watch', function() {
 	watch(cssFilename, function() {
 		gulp.start('css');
 	});
-	watch([jadeFilename, dataFilename], function() {
-		gulp.start('jade');
+	watch([pugFilename, dataFilename], function() {
+		gulp.start('pug');
 	});
 	watch(jsFilesPath, function() {
 		gulp.start('scripts');
@@ -95,7 +97,8 @@ gulp.task('watch', function() {
 		console.log(file.basename + ' added or changed!');
 		gulp.start('gm');
 	});
-	// if an image in the folder was deleted, also delete the image with same filename in the build folder
+	// if an image in the folder was deleted, also delete the image with same
+	// filename in the build folder
 	watch(imgSrcPath, {events: 'unlink'}, function(file) {
 		console.log(file.basename + ' deleted!');
 		rimraf(imgBuildDir + '/' + file.basename, function(err) {
@@ -126,11 +129,7 @@ gulp.task('connect', function() {
 // Main tasks
 
 // dev task: build everything
-gulp.task('dev', function(callback) {
-	return runSequence(['css', 'jade', 'scripts'], 'gm', callback);
-});
+gulp.task('dev', gulp.series(gulp.parallel('css', 'pug', 'scripts'), 'gm'));
 
 // default task: build everything, open BrowserSync, and then watch files
-gulp.task('default', function(callback) {
-	return runSequence('dev', 'connect', 'watch', callback);
-});
+gulp.task('default', gulp.series('dev', 'connect', 'watch'));

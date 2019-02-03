@@ -4,8 +4,8 @@ html
 		section.imgSequence
 			each imgObj in imageData
 				- var aspectRatio = typeof(imgObj.aspectRatio) !== "undefined" ? imgObj.aspectRatio : defaultAspectRatio
-				div.imgContainer(style="padding-bottom: #{100/aspectRatio}%")
-					img(class="b-lazy" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP4Xw8AAoABf5/NhYYAAAAASUVORK5CYII=" data-src="images/#{imgObj.filename}")
+				div.imgContainer(style=`padding-bottom: ${100/aspectRatio}%`)
+					img(class="b-lazy" data-src=`images/${imgObj.filename}` src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP4Xw8AAoABf5/NhYYAAAAASUVORK5CYII=")
 					if typeof(imgObj.title) !== "undefined"
 						div.imgTitle
 							div.titleContent= imgObj.title	
