@@ -1,16 +1,19 @@
 html
 	body
 		link(rel="stylesheet", href="style.css")
-		section.imgSequence
-			each imgObj in imageData
-				- var aspectRatio = typeof(imgObj.aspectRatio) !== "undefined" ? imgObj.aspectRatio : defaultAspectRatio
-				div.imgContainer(style=`padding-bottom: ${100/aspectRatio}%`)
-					img(class="b-lazy" data-src=`images/${imgObj.filename}` src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP4Xw8AAoABf5/NhYYAAAAASUVORK5CYII=")
-					if typeof(imgObj.title) !== "undefined"
-						div.imgTitle
-							div.titleContent= imgObj.title	
-					if typeof(imgObj.caption) !== "undefined"
-						div.imgCaption
-							div.captionContent!= imgObj.caption
+		div#imgWrapper
+			section#imgSequence
+				each imgObj in imageData
+					- let aspectRatio = typeof(imgObj.aspectRatio) !== "undefined" ? imgObj.aspectRatio : defaultAspectRatio
+					div.imgContainer(style=`padding-bottom: ${100/aspectRatio}%`)
+						img(class="b-lazy" data-src=`images/${imgObj.filename}` src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP4Xw8AAoABf5/NhYYAAAAASUVORK5CYII=")
+						if typeof(imgObj.title) !== "undefined"
+							div.imgTitle
+								div.titleContent= imgObj.title
+						if typeof(imgObj.caption) !== "undefined"
+							div.imgCaption
+								div.captionContent!= imgObj.caption
 		script(src="blazy.min.js")
+		if (typeof(defaultAspectRatio) !== "undefined")
+			script= `let defaultAspectRatio = ${defaultAspectRatio};`
 		script(src="main.js")

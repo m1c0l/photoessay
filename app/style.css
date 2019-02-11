@@ -2,6 +2,15 @@ body {
 	margin: 0;
 	font-family: Helvetica;
 }
+#imgWrapper {
+	background-color: rgb(238, 238, 238);
+}
+#imgSequence {
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 50px;
+	padding-bottom: 50px;
+}
 section.header {
 	padding: 10px;
 }
