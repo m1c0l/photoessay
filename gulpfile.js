@@ -6,7 +6,6 @@ let data = require('gulp-data');
 let gm = require('gulp-gm');
 let pug = require('gulp-pug');
 let jshint = require('gulp-jshint');
-let watch = require('gulp-watch');
 let rimraf = require('rimraf');
 
 // paths for the development and build directories
@@ -28,7 +27,7 @@ let imgBuildDir = paths.build + '/images';
 
 // pug task: Pull in image data from the json file and
 // compile the pug file into html, and copy to the build folder
-gulp.task('pug', function() {
+function loadPug() {
 	let stream = gulp.src(pugFilename)
 		.pipe(data(function(file) {
 			return require(dataFilename);
@@ -46,32 +45,32 @@ gulp.task('pug', function() {
 		delete require.cache[require.resolve(dataFilename)];
 	});
 	return stream;
-});
+}
 
 // css task: copy stylesheets to the build folder and reload the browser to show
 // changes
-gulp.task('css', function() {
+function css() {
 	return gulp.src(cssFilename)
 		.pipe(gulp.dest(paths.build))
 		.pipe(reload({stream: true}));
-});
+}
 
 // scripts task: run JS scripts through JSHint and copy to build folder, reload
 // browser to show changes.
 // JSHint ignores files listed in the .jshintignore file
-gulp.task('scripts', function() {
+function scripts() {
 	return gulp.src(jsFilesPath)
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'))
 		.pipe(gulp.dest(paths.build))
 		.pipe(reload({stream: true}));
-});
+}
 
 // GraphicsMagick task: resize images to a set width,
 // while the height stays at the original aspect ratio.
 // To save time, only process images that have been changed.
-let resizedImageWidth = 1366;
-gulp.task('gm', function() {
+let resizedImageWidth = 1800;
+function runGM() {
 	return gulp.src(imgSrcPath)
 		.pipe(changed(imgBuildDir))
 		.pipe(gm(function(gmfile) {
@@ -79,57 +78,53 @@ gulp.task('gm', function() {
 		}))
 		.pipe(gulp.dest(imgBuildDir))
 		.pipe(reload({stream: true}));
-});
+}
 
 // Watch task: whenever a file is changed, run its corresponding task
-gulp.task('watch', function() {
-	watch(cssFilename, function() {
-		gulp.start('css');
-	});
-	watch([pugFilename, dataFilename], function() {
-		gulp.start('pug');
-	});
-	watch(jsFilesPath, function() {
-		gulp.start('scripts');
-	});
+function watch(){
+	gulp.watch(cssFilename, css);
+	gulp.watch([pugFilename, dataFilename], loadPug);
+	gulp.watch(jsFilesPath,scripts);
+
+	let imgWatcher = gulp.watch(imgSrcPath);
 	// if an image in the folder was added or modified, run the gm task
-	watch(imgSrcPath, {events: ['add', 'change']}, function(file) {
-		console.log(file.basename + ' added or changed!');
-		gulp.start('gm');
+	imgWatcher.on('add', function(path) {
+		console.log(path + ' added!');
+		runGM();
+	});
+	imgWatcher.on('change', function(path) {
+		console.log(path + ' changed!');
+		runGM();
 	});
 	// if an image in the folder was deleted, also delete the image with same
 	// filename in the build folder
-	watch(imgSrcPath, {events: 'unlink'}, function(file) {
-		console.log(file.basename + ' deleted!');
-		rimraf(imgBuildDir + '/' + file.basename, function(err) {
+	imgWatcher.on('unlink', function(path) {
+		let buildPath = imgBuildDir + '/' +
+			path.substring(path.lastIndexOf('\\'));
+		console.log(path + ' deleted, attempting to delete ' + buildPath);
+		rimraf(buildPath, function(err) {
 			if (err) {
 				console.log('rimraf error', err);
 			}
 		});
-		reload({stream: true}); 
+		reload({stream: true});
 	});
-		
-});
-
-// Cleaning task: run if you want to delete the build
-gulp.task('deleteBuild', function(callback) {
-	rimraf(paths.build, callback);
-});
+}
 
 // Connecting task: BrowserSync on paths.build
-gulp.task('connect', function() {
+function connect() {
     browserSync({
         port: 9000,
         server: {
             baseDir: paths.build
         }
     });
-});
+};
 
 // Main tasks
 
 // dev task: build everything
-gulp.task('dev', gulp.series(gulp.parallel('css', 'pug', 'scripts'), 'gm'));
+let devTask = gulp.series(gulp.parallel(css, loadPug, scripts), runGM);
 
-// default task: build everything, open BrowserSync, and then watch files
-gulp.task('default', gulp.series('dev', 'connect', 'watch'));
+// default task: build everything and open BrowserSync
+exports.default = gulp.series(devTask, gulp.parallel(connect, watch));

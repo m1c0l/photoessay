@@ -7,7 +7,6 @@
 		"gulp-gm": ">=0.0.8",
 		"gulp-jshint": ">=1.9.2",
 		"gulp-pug": "latest",
-		"gulp-watch": ">=4.1.1",
 		"jshint": "~2.9.7",
 		"rimraf": ">=2.4.4"
 	}
