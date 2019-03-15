@@ -21,6 +21,16 @@ div.imgContainer {
 	position: relative;
 	height: 0;
 }
+div.imgContainer .hidden {
+	visibility: hidden;
+	opacity: 0;
+	transition: visibility 0.5s, opacity 0.5s linear;
+}
+div.imgContainer .visible {
+	visibility: visible;
+	opacity: 1;
+	transition: visibility 0.5s, opacity 0.5s linear;
+}
 img {
 	width: 100%;
 	position: relative;
@@ -40,10 +50,22 @@ div.imgCaption {
 	position: absolute;
 	bottom: 0;
 	color: #fff;
-	width: 100%;
+	max-width: 35%;
 	background-color: rgba(0, 0, 0, .5);
 }
 div.imgCaption div.captionContent {
 	font-size: 1.5vw;
 	padding: 1vw;
+}
+#hide-show-captions {
+	position: fixed;
+	left: 90%;
+	bottom: 5vw;
+	font-size: 1.2vw;
+}
+#back-to-top {
+	position: fixed;
+	left: 90%;
+	bottom: 2vw;
+	font-size: 1.2vw;
 }

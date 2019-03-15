@@ -35,8 +35,39 @@
 		window.onresize = resizeToAspectRatio;
 	}
 
+	let areCaptionsHidden = false;
+	document.getElementById("hide-show-captions").onclick = function() {
+		areCaptionsHidden = !areCaptionsHidden;
+		if (areCaptionsHidden) {
+			this.innerText = "Show captions";
+		}
+		else {
+			this.innerText = "Hide captions";
+		}
+		for (let elem of document.getElementsByClassName("imgCaption")) {
+			if (areCaptionsHidden) {
+				elem.classList.add("hidden");
+				elem.classList.remove("visible");
+			}
+			else {
+				elem.classList.add("visible");
+				elem.classList.remove("hidden");
+			}
+		}
+	};
+
+	// https://stackoverflow.com/a/48942924
+	const scrollToTop = () => {
+		const c = document.documentElement.scrollTop || document.body.scrollTop;
+		if (c > 0) {
+			window.requestAnimationFrame(scrollToTop);
+			window.scrollTo(0, c - c / 8);
+		}
+	};
+	document.getElementById("back-to-top").onclick = scrollToTop;
+
 	// initialize Blazy, load images when user scrolls to 1000px above them
-	let bLazy = new Blazy({
+	Blazy({
 		offset: 1000
 	});
 })();
