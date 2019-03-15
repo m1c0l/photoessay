@@ -126,5 +126,5 @@ function connect() {
 // dev task: build everything
 let devTask = gulp.series(gulp.parallel(css, loadPug, scripts), runGM);
 
-// default task: build everything and open BrowserSync
+// default task: build everything, open BrowserSync, watch build files
 exports.default = gulp.series(devTask, gulp.parallel(connect, watch));
