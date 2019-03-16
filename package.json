@@ -2,10 +2,10 @@
 	"devDependencies": {
 		"browser-sync": ">=2.2.1",
 		"gulp": "4.0.0",
-		"gulp-changed": ">=1.2.1",
 		"gulp-data": ">=1.2.1",
 		"gulp-gm": ">=0.0.8",
 		"gulp-jshint": ">=1.9.2",
+		"gulp-newer": "~1.4.0",
 		"gulp-pug": "latest",
 		"jshint": "~2.9.7",
 		"rimraf": ">=2.4.4"

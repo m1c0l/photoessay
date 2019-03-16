@@ -1,9 +1,8 @@
 let gulp = require('gulp');
 let browserSync = require('browser-sync');
-let reload = browserSync.reload;
-let changed = require('gulp-changed');
 let data = require('gulp-data');
 let gm = require('gulp-gm');
+let newer = require('gulp-newer');
 let pug = require('gulp-pug');
 let jshint = require('gulp-jshint');
 let rimraf = require('rimraf');
@@ -22,8 +21,14 @@ let pugFilename = paths.app + '/index.pug';
 let cssFilename = paths.app + '/style.css';
 let dataFilename = paths.app + '/data.json';
 let jsFilesPath = paths.app + '/*.js';
-let imgSrcPath = paths.app + '/images/*.JPG';
+let imgSrcPath = paths.app + '/images/*.{jpg,JPG}';
 let imgBuildDir = paths.build + '/images';
+
+let server = browserSync.create();
+
+function reload() {
+	server.reload();
+}
 
 // pug task: Pull in image data from the json file and
 // compile the pug file into html, and copy to the build folder
@@ -33,9 +38,7 @@ function loadPug() {
 			return require(dataFilename);
 		}))
 		.pipe(pug())
-		.pipe(gulp.dest(paths.build))
-		// reload the browser whenever we want to show changes
-		.pipe(reload({stream: true}));
+		.pipe(gulp.dest(paths.build));
 	// require() caches the json file, so we need to clear it 
 	// from the cache after the task finishes, or else when we
 	// call require() on the json file again during the 
@@ -51,8 +54,8 @@ function loadPug() {
 // changes
 function css() {
 	return gulp.src(cssFilename)
-		.pipe(gulp.dest(paths.build))
-		.pipe(reload({stream: true}));
+		.pipe(newer(paths.build))
+		.pipe(gulp.dest(paths.build));
 }
 
 // scripts task: run JS scripts through JSHint and copy to build folder, reload
@@ -60,10 +63,10 @@ function css() {
 // JSHint ignores files listed in the .jshintignore file
 function scripts() {
 	return gulp.src(jsFilesPath)
+		.pipe(newer(paths.build))
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'))
-		.pipe(gulp.dest(paths.build))
-		.pipe(reload({stream: true}));
+		.pipe(gulp.dest(paths.build));
 }
 
 // GraphicsMagick task: resize images to a set width,
@@ -72,33 +75,25 @@ function scripts() {
 let resizedImageWidth = 1800;
 function runGM() {
 	return gulp.src(imgSrcPath)
-		.pipe(changed(imgBuildDir))
+		.pipe(newer(imgBuildDir))
 		.pipe(gm(function(gmfile) {
 			return gmfile.resize(resizedImageWidth);
 		}))
-		.pipe(gulp.dest(imgBuildDir))
-		.pipe(reload({stream: true}));
+		.pipe(gulp.dest(imgBuildDir));
 }
 
 // Watch task: whenever a file is changed, run its corresponding task
-function watch(){
-	gulp.watch(cssFilename, css);
-	gulp.watch([pugFilename, dataFilename], loadPug);
-	gulp.watch(jsFilesPath,scripts);
+function watch() {
+	gulp.watch(cssFilename, gulp.series(css, reload));
+	gulp.watch([pugFilename, dataFilename], gulp.series(loadPug, reload));
+	gulp.watch(jsFilesPath, gulp.series(scripts, reload));
 
-	let imgWatcher = gulp.watch(imgSrcPath);
 	// if an image in the folder was added or modified, run the gm task
-	imgWatcher.on('add', function(path) {
-		console.log(path + ' added!');
-		runGM();
-	});
-	imgWatcher.on('change', function(path) {
-		console.log(path + ' changed!');
-		runGM();
-	});
+	gulp.watch(imgSrcPath, {events: ['add', 'change']},
+		gulp.series(runGM, reload));
 	// if an image in the folder was deleted, also delete the image with same
 	// filename in the build folder
-	imgWatcher.on('unlink', function(path) {
+	gulp.watch(imgSrcPath).on('unlink', function(path) {
 		let buildPath = imgBuildDir + '/' +
 			path.substring(path.lastIndexOf('\\'));
 		console.log(path + ' deleted, attempting to delete ' + buildPath);
@@ -107,13 +102,13 @@ function watch(){
 				console.log('rimraf error', err);
 			}
 		});
-		reload({stream: true});
+		reload();
 	});
 }
 
 // Connecting task: BrowserSync on paths.build
 function connect() {
-    browserSync({
+    server.init({
         port: 9000,
         server: {
             baseDir: paths.build
