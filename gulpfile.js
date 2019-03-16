@@ -26,8 +26,9 @@ let imgBuildDir = paths.build + '/images';
 
 let server = browserSync.create();
 
-function reload() {
+function reload(done) {
 	server.reload();
+	done();
 }
 
 // pug task: Pull in image data from the json file and
