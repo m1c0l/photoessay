@@ -50,7 +50,7 @@ div.imgCaption {
 	position: absolute;
 	bottom: 0;
 	color: #fff;
-	max-width: 35%;
+	max-width: 40%;
 	background-color: rgba(0, 0, 0, .5);
 }
 div.imgCaption div.captionContent {
