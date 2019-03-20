@@ -1,5 +1,5 @@
 # photoessay
-Inspired by [Expose](https://github.com/Jack000/Expose), this is a static, responsive photoessay generator using [gulp.js](http://gulpjs.com/) to automate workflow. photoessay generates a site that looks like http://mikeli.me/photos/Taiwan/, from my personal site. The site is essentially a series of full-page photos with an optional title at the top and caption at the bottom.
+Inspired by [Expose](https://github.com/Jack000/Expose), this is a static, responsive photoessay generator using [gulp.js](http://gulpjs.com/) to automate workflow. photoessay generates a site that looks like http://mikeli.me/photos/flowers/ and http://mikeli.me/photos/Taiwan/, from my personal site. The site is essentially a series of full-page photos with an optional title at the top and caption at the bottom.
 
 ## Installation
 
