@@ -54,18 +54,42 @@ div.imgCaption {
 	background-color: rgba(0, 0, 0, .5);
 }
 div.imgCaption div.captionContent {
-	font-size: 1.5vw;
+	font-size: 2vw;
 	padding: 1vw;
+}
+div.imgCaption div.captionContent a {
+	color: #3498db;
 }
 #hide-show-captions {
 	position: fixed;
-	left: 90%;
-	bottom: 5vw;
+	left: 87%;
+	bottom: 6vw;
 	font-size: 1.2vw;
+	padding: 6px;
 }
 #back-to-top {
 	position: fixed;
-	left: 90%;
+	left: 87%;
 	bottom: 2vw;
 	font-size: 1.2vw;
+}
+/*
+Hopefully this'll look good enough for small smartphone screens
+*/
+@media only screen
+  and (min-device-width: 320px)
+  and (max-device-width: 640px) {
+	div.imgCaption div.captionContent {
+		font-size: 3vw;
+	}
+	#hide-show-captions {
+		font-size: 3vw;
+		bottom: 100px;
+		left: 75%;
+	}
+	#back-to-top {
+		font-size: 3vw;
+		bottom: 50px;
+		left: 75%;
+	}
 }
